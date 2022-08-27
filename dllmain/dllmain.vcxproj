@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="csgo.hpp" />
+    <ClInclude Include="dataTypes.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="dx.h" />
     <ClInclude Include="hook.h" />

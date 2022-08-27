@@ -7,12 +7,11 @@ tEndScene oEndScene = nullptr;
 extern LPDIRECT3DDEVICE9 pDevice = nullptr;
 
 uintptr_t engineBase = (uintptr_t)GetModuleHandleW(L"engine.dll");
-uintptr_t* clientstate = (uintptr_t*)(engineBase + (uintptr_t)hazedumper::signatures::dwClientState);
-
-
+uintptr_t* clientstate = (uintptr_t*)(engineBase + (uintptr_t)offsets::dwClientState);
+uintptr_t* clientVA = (uintptr_t*)(*clientstate + (uintptr_t)offsets::dwClientState_ViewAngles);
 
 uintptr_t clientBase = (uintptr_t)GetModuleHandleW(L"client.dll");
-
+uintptr_t* entityList = (uintptr_t*)(clientBase + (uintptr_t)offsets::dwEntityList);
 
 
 void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
@@ -21,10 +20,8 @@ void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
 	{
 		pDevice = o_pDevice;
 	}
-
-	std::cout << clientstate << "\n";
-	//std::cout << clientstate << "\n";
-	//std::cout << "\n";
+	
+	std::cout  << (uintptr_t*)getLocalPlayerStartAddr(entityList) << "\n";
 
 	oEndScene(pDevice);
 }
