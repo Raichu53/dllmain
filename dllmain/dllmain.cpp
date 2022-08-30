@@ -20,9 +20,14 @@ void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
 	{
 		pDevice = o_pDevice;
 	}
-	
-	std::cout  << (uintptr_t*)getLocalPlayerStartAddr(entityList) << "\n";
 
+	vec3_t pos;
+	pos = getBonePos(*entityList, 3);
+	/* std::cout << pos.x << "\n";
+	std::cout << pos.y << "\n";
+	std::cout << pos.z << "\n";
+	std::cout << "\n";*/
+	
 	oEndScene(pDevice);
 }
 

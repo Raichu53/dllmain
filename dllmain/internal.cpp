@@ -53,3 +53,14 @@ bool WorldToScreen(vec3_t pos, vec2& screen, float matrix[16], int windowWidth, 
 	screen.y = -(windowHeight / 2 * NDC.y) + (NDC.y + windowHeight / 2);
 	return true;
 }
+vec3_t getBonePos(uintptr_t entity, int boneId)
+{
+	vec3_t pos;
+	uintptr_t* pBoneAddr = (uintptr_t*)(entity + offsets::m_dwBoneMatrix);
+	
+	pos.x = *((float*)*pBoneAddr + boneId * 12 + 3);
+	pos.y = *((float*)*pBoneAddr + boneId * 12 + 7);
+	pos.z = *((float*)*pBoneAddr + boneId * 12 + 11);
+
+	return pos;
+}
