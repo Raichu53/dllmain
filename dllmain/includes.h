@@ -16,3 +16,7 @@
 #include "hook.h"
 #include "internal.h"
 #include "csgo.hpp"
+
+#define PI 3.1415927f
+#define WINDOW_HEIGHT 768
+#define WINDOW_WIDTH 1024	

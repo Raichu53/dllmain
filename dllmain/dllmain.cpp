@@ -12,6 +12,7 @@ uintptr_t* clientVA = (uintptr_t*)(*clientstate + (uintptr_t)offsets::dwClientSt
 
 uintptr_t clientBase = (uintptr_t)GetModuleHandleW(L"client.dll");
 uintptr_t* entityList = (uintptr_t*)(clientBase + (uintptr_t)offsets::dwEntityList);
+float* viewMatrix = (float*)(clientBase + (uintptr_t)offsets::dwViewMatrix);
 
 
 void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
@@ -20,13 +21,9 @@ void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
 	{
 		pDevice = o_pDevice;
 	}
-
-	vec3_t pos;
-	pos = getBonePos(*entityList, 3);
-	/* std::cout << pos.x << "\n";
-	std::cout << pos.y << "\n";
-	std::cout << pos.z << "\n";
-	std::cout << "\n";*/
+	//fred
+	uintptr_t* myplayer = entityList + 20;
+	esp::playerHeight(*myplayer,viewMatrix,pDevice);
 	
 	oEndScene(pDevice);
 }
