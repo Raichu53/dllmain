@@ -20,21 +20,32 @@ bool esp::drawLine(LPDIRECT3DDEVICE9 dev, float x, float y, float lenght,float t
 	return true;
 }
 
-vec2 esp::playerHeight(uintptr_t player,float* viewMatrix,LPDIRECT3DDEVICE9 dev )
+vec2 esp::playerScale(uintptr_t player,float* viewMatrix,LPDIRECT3DDEVICE9 dev )
 {
 
 	vec2 scale = {};
 	vec2 screenHead = {};
-
+	vec2 screenFeet1 = {};
+	vec2 screenFeet2 = {};
 
 	vec3_t headPos = getBonePos(player, 8);
+	vec3_t feetPos1 = getBonePos(player, 72);
+	vec3_t feetPos2 = getBonePos(player, 79);
 	
 
 	WorldToScreen(headPos, screenHead, viewMatrix, WINDOW_WIDTH, WINDOW_HEIGHT);
-	drawFilledRect(dev, screenHead.x, screenHead.y, 10, 10, D3DCOLOR_XRGB(0, 255, 0));
+	drawFilledRect(dev, screenHead.x, screenHead.y, 4, 4, D3DCOLOR_XRGB(255, 0, 0));
+
+	WorldToScreen(feetPos1, screenFeet1, viewMatrix, WINDOW_WIDTH, WINDOW_HEIGHT);
+	drawFilledRect(dev, screenFeet1.x, screenFeet1.y, 4, 4, D3DCOLOR_XRGB(0, 255, 0));
+
+	WorldToScreen(feetPos2, screenFeet2, viewMatrix, WINDOW_WIDTH, WINDOW_HEIGHT);
+	drawFilledRect(dev, screenFeet2.x, screenFeet2.y, 4, 4, D3DCOLOR_XRGB(0, 0, 255));
 	
 	
-	//std::cout << "headPos2d : " << screenHead.x << " , " << screenHead.y << std::endl;
+	
+
+	//std::cout << "width : " << scale.x << " , " << "height : " << scale.y << std::endl;
 
 	return scale;
 }

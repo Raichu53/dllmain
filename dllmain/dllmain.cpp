@@ -23,8 +23,8 @@ void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
 	}
 	//fred
 	uintptr_t* myplayer = entityList + 20;
-	esp::playerHeight(*myplayer,viewMatrix,pDevice);
-	
+	vec2 scale = esp::playerScale(*myplayer,viewMatrix,pDevice);
+
 	oEndScene(pDevice);
 }
 
