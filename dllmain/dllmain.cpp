@@ -23,8 +23,11 @@ void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
 	}
 	//fred
 	uintptr_t* myplayer = entityList + 20;
-	vec2 scale = esp::playerScale(*myplayer,viewMatrix,pDevice);
-
+	//entityList cuz localPlayer pointer is at offset 0 in the entityList
+	vec2 headPos = esp::getPlayerScreenHeadPos(*myplayer, viewMatrix);
+	float distance = esp::getDistanceBetweenEntAndLocalPlayer(*entityList, *myplayer);
+	esp::drawBox(headPos,distance,pDevice);
+	
 	oEndScene(pDevice);
 }
 
@@ -44,7 +47,7 @@ DWORD WINAPI hThread(HMODULE hMod)
 
 	while (!GetAsyncKeyState(VK_END))
 	{
-		Sleep(1);
+		Sleep(5);
 	}
 
 	//unhook

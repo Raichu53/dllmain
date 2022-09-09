@@ -61,6 +61,15 @@ vec3_t getBonePos(uintptr_t entity, int boneId)
 	pos.x = *((float*)*pBoneAddr + boneId * 12 + 3);
 	pos.y = *((float*)*pBoneAddr + boneId * 12 + 7);
 	pos.z = *((float*)*pBoneAddr + boneId * 12 + 11);
-
+	
 	return pos;
+}
+bool isPlayerCT(uintptr_t player)
+{
+	uintptr_t* pLocalPlayerTeamId = reinterpret_cast<uintptr_t*>(player + offsets::m_iTeamNum);
+	if (*(int*)pLocalPlayerTeamId == 2)
+	{
+		return false;
+	}
+	return true;
 }
