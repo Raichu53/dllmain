@@ -8,12 +8,7 @@ namespace rgb_d3d
 	D3DCOLOR yellow = D3DCOLOR_XRGB(255, 255, 0);
 }
 
-void esp::drawFilledRect(LPDIRECT3DDEVICE9 dev, float x, float y, int w, int h, D3DCOLOR color)
-{
-	D3DRECT rect = { x,y,x + w,y + h };
-	dev->Clear(1, &rect, D3DCLEAR_TARGET | D3DCLEAR_TARGET, color, 0, 0);
-}
-void esp::drawLine(LPDIRECT3DDEVICE9 dev, int x1,int y1,int x2,int y2,int thickness,D3DCOLOR color)
+void esp::drawLine( int x1,int y1,int x2,int y2,int thickness,D3DCOLOR color)
 {
 	LPD3DXLINE LineL;
 	D3DXCreateLine(dev, &LineL);
@@ -26,29 +21,29 @@ void esp::drawLine(LPDIRECT3DDEVICE9 dev, int x1,int y1,int x2,int y2,int thickn
 	LineL->Draw(Line, 2, color);
 	LineL->Release();
 }
-vec2 esp::getPlayerScreenHeadPos(uintptr_t player, float* viewMatrix)
+vec2 esp::getPlayerScreenHeadPos(uintptr_t player)
 {
 	vec2 screenHead = {};
 	vec3_t headPos = getBonePos(player, 8);
 	WorldToScreen(headPos, screenHead, viewMatrix, WINDOW_WIDTH, WINDOW_HEIGHT);
 	return screenHead;
 }
-float esp::getDistanceBetweenEntAndLocalPlayer(uintptr_t localPlayer,uintptr_t player )
+float esp::getDistanceBetweenEntAndLocalPlayer(uintptr_t player)
 {
 
 	float distance = {};
 	vec3_t entityHeadPos = getBonePos(player, 8);
-	vec3_t localHeadPos = getBonePos(localPlayer, 8);
+	vec3_t localHeadPos = getBonePos(*esp::entityList, 8);
 
 	//formula : sqrt((x2-x1)²+(y2-y1)²+(z2-z1)²)
 	distance = sqrt(pow((entityHeadPos.x - localHeadPos.x), 2) + pow((entityHeadPos.y - localHeadPos.y), 2) + 
 		pow((entityHeadPos.z - localHeadPos.z), 2));
 	
-	std::cout << "distance between player : " << (uintptr_t*)player << " and localPlayer is : " << distance << std::endl;
+	//std::cout << "distance between player : " << (uintptr_t*)player << " and localPlayer is : " << distance << std::endl;
 
 	return distance;
 }
-void esp::drawBox(vec2 headPos,float distance,LPDIRECT3DDEVICE9 dev)
+void esp::drawBox(vec2 headPos,float distance,float thickness,D3DCOLOR color)
 {
 	float newDefaultHeight, newDefaultWidth, ratio = {};
 	vec2 newDefaultOffset = {};
@@ -64,29 +59,63 @@ void esp::drawBox(vec2 headPos,float distance,LPDIRECT3DDEVICE9 dev)
 	}
 	//verticals
 	//left
-	drawLine(dev, headPos.x - newDefaultOffset.x,
+	drawLine( headPos.x - newDefaultOffset.x,
 		headPos.y - newDefaultOffset.y,
 		headPos.x - newDefaultOffset.x, 
 		(headPos.y - newDefaultOffset.y) + newDefaultHeight,
-		2,rgb_d3d::green);
+		thickness,color);
 	//right
-	drawLine(dev, (headPos.x - newDefaultOffset.x) + newDefaultWidth, 
+	drawLine((headPos.x - newDefaultOffset.x) + newDefaultWidth, 
 		headPos.y - newDefaultOffset.y,
 		headPos.x - newDefaultOffset.x + newDefaultWidth,
 		(headPos.y - newDefaultOffset.y) + newDefaultHeight,
-		2,rgb_d3d::green);
+		thickness,color);
 
 	//horizontals
 	//top
-	drawLine(dev, headPos.x - newDefaultOffset.x,
+	drawLine(headPos.x - newDefaultOffset.x,
 		headPos.y - newDefaultOffset.y,
 		(headPos.x - newDefaultOffset.x) + newDefaultWidth,
-		headPos.y - newDefaultOffset.y, 
-		2,rgb_d3d::green);
+		headPos.y - newDefaultOffset.y,
+		thickness, color);
 	//bottom
-	drawLine(dev, headPos.x - newDefaultOffset.x,
+	drawLine( headPos.x - newDefaultOffset.x,
 		(headPos.y - newDefaultOffset.y) + newDefaultHeight,
 		(headPos.x - newDefaultOffset.x) + newDefaultWidth,
 		(headPos.y - newDefaultOffset.y) + newDefaultHeight,
-		2, rgb_d3d::green);
+		thickness,color);
+}
+esp::esp(uintptr_t* entityList,float* viewMatrix,LPDIRECT3DDEVICE9 dev)
+{
+	esp::entityList = entityList;
+	esp::viewMatrix = viewMatrix;
+	esp::dev = dev;
+	esp::numberOfEnts = getNumberOfEntities(entityList);
+}
+void esp::update()
+{
+	uintptr_t* player = nullptr;
+	this->isLocalpCT = isPlayerCT(*entityList);
+	for (int i = 0; i < this->numberOfEnts; i++)
+	{
+		if (!i) continue; //bc offset 0 of entList is localPlayer
+		
+		player = reinterpret_cast<uintptr_t*>(entityList + (i * 4));
+		if (!isPlayerDormant(*player))
+		{
+			this->distance = esp::getDistanceBetweenEntAndLocalPlayer(*player);
+			this->headPos = esp::getPlayerScreenHeadPos(*player);
+
+			if (this->distance == 0)
+				continue;
+			if (isPlayerCT(*player) == this->isLocalpCT)
+			{
+				esp::drawBox(this->headPos, this->distance, 1, D3DCOLOR_XRGB(0, 255, 0));
+			}
+			if (isPlayerCT(*player) != this->isLocalpCT)
+			{
+				esp::drawBox(this->headPos, this->distance, 1, D3DCOLOR_XRGB(255, 0, 0));
+			}
+		}
+	}
 }

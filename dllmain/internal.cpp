@@ -73,3 +73,13 @@ bool isPlayerCT(uintptr_t player)
 	}
 	return true;
 }
+//return false if player is updated (<=> not dormant)
+bool isPlayerDormant(uintptr_t player)
+{
+	uintptr_t* pPlayerDormant = reinterpret_cast<uintptr_t*>(player + offsets::m_bDormant);
+	if (*(int*)pPlayerDormant)
+	{
+		return true;
+	}
+	return false;
+}

@@ -14,20 +14,17 @@ uintptr_t clientBase = (uintptr_t)GetModuleHandleW(L"client.dll");
 uintptr_t* entityList = (uintptr_t*)(clientBase + (uintptr_t)offsets::dwEntityList);
 float* viewMatrix = (float*)(clientBase + (uintptr_t)offsets::dwViewMatrix);
 
-
+esp espHack = esp::esp(entityList, viewMatrix, pDevice);
 void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
 {
 	if (!pDevice)
 	{
 		pDevice = o_pDevice;
+		espHack.dev = pDevice;
 	}
-	//fred
-	uintptr_t* myplayer = entityList + 20;
-	//entityList cuz localPlayer pointer is at offset 0 in the entityList
-	vec2 headPos = esp::getPlayerScreenHeadPos(*myplayer, viewMatrix);
-	float distance = esp::getDistanceBetweenEntAndLocalPlayer(*entityList, *myplayer);
-	esp::drawBox(headPos,distance,pDevice);
-	
+
+	espHack.update();
+
 	oEndScene(pDevice);
 }
 

@@ -12,3 +12,5 @@ bool WorldToScreen(vec3_t pos, vec2& screen, float matrix[16], int windowWidth, 
 vec3_t getBonePos(uintptr_t entity, int boneId);
 
 bool isPlayerCT(uintptr_t player);
+
+bool isPlayerDormant(uintptr_t player);
