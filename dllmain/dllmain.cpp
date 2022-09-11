@@ -6,25 +6,20 @@ BYTE EndSceneBytes[7]{ 0 };
 tEndScene oEndScene = nullptr;
 extern LPDIRECT3DDEVICE9 pDevice = nullptr;
 
-uintptr_t engineBase = (uintptr_t)GetModuleHandleW(L"engine.dll");
-uintptr_t* clientstate = (uintptr_t*)(engineBase + (uintptr_t)offsets::dwClientState);
-uintptr_t* clientVA = (uintptr_t*)(*clientstate + (uintptr_t)offsets::dwClientState_ViewAngles);
 
-uintptr_t clientBase = (uintptr_t)GetModuleHandleW(L"client.dll");
-uintptr_t* entityList = (uintptr_t*)(clientBase + (uintptr_t)offsets::dwEntityList);
-float* viewMatrix = (float*)(clientBase + (uintptr_t)offsets::dwViewMatrix);
+HackClass Hack = HackClass(NULL);
+esp espHack = esp(Hack.entityList, Hack.viewMatrix, Hack.pDevice);
 
-esp espHack = esp::esp(entityList, viewMatrix, pDevice);
 void APIENTRY hkEndScene(LPDIRECT3DDEVICE9 o_pDevice)
 {
 	if (!pDevice)
 	{
 		pDevice = o_pDevice;
-		espHack.dev = pDevice;
+		Hack.espHack = &espHack;
+		Hack.espHack->dev = pDevice;
 	}
 
-	espHack.update();
-
+	Hack.espHack->update();
 	oEndScene(pDevice);
 }
 

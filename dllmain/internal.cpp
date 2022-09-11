@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "dataTypes.h"
 
+
 uintptr_t getLocalPlayerStartAddr(uintptr_t* entityList)
 {
 	uintptr_t localPlayerStartAddr = *entityList;

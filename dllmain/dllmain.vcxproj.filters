@@ -39,6 +39,9 @@
     <ClCompile Include="internal.cpp">
       <Filter>internal</Filter>
     </ClCompile>
+    <ClCompile Include="Hack.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hook.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="dataTypes.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="hack.h">
+      <Filter>Fichiers sources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

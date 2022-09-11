@@ -142,6 +142,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="drawing.cpp" />
     <ClCompile Include="dx.cpp" />
+    <ClCompile Include="Hack.cpp" />
     <ClCompile Include="hook.cpp" />
     <ClCompile Include="internal.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="dataTypes.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="dx.h" />
+    <ClInclude Include="hack.h" />
     <ClInclude Include="hook.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="internal.h" />
